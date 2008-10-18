@@ -1,22 +1,10 @@
-# $Id: snes9x.spec,v 1.1 2008/10/18 13:56:58 thl Exp $
-# Authority: matthias
-
-%{?dist: %{expand: %%define %dist 1}}
-%{?fedora: %{expand: %%define fc%{fedora} 1}}
-
-%{!?dist:%define _with_modxorg 1}
-%{?el5:  %define _with_modxorg 1}
-%{?fc7:  %define _with_modxorg 1}
-%{?fc6:  %define _with_modxorg 1}
-%{?fc5:  %define _with_modxorg 1}
-
 #define prever -WIP1
 %define real_version 1.51
 
 Summary: Portable, freeware Super Nintendo Entertainment System (TM) emulator
 Name: snes9x
 Version: 1.51
-Release: 2.fc7
+Release: 2%{?dist}
 License: Other
 Group: Applications/Emulators
 URL: http://www.snes9x.com/
@@ -25,8 +13,7 @@ Patch0: snes9x-1.43-wmclass.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gcc-c++, zlib-devel, libpng-devel
 BuildRequires: libGL-devel, libGLU-devel
-%{?_with_modxorg:BuildRequires: libXt-devel, libXext-devel, libXxf86dga-devel, libXxf86vm-devel}
-%{!?_with_modxorg:BuildRequires: XFree86-devel}
+BuildRequires: libXt-devel, libXext-devel, libXxf86dga-devel, libXxf86vm-devel
 BuildRequires: nasm
 
 %description
@@ -74,8 +61,9 @@ and Super Famicom Nintendo game systems on your computer.
 
 
 %changelog
-* Sat Oct 18 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info - 1.51-2.fc7
+* Sat Oct 18 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info - 1.51-2
 - rebuild for RPM Fusion
+- always build for xorg
 
 * Sat Aug 11 2007 Matthias Saou <http://freshrpms.net/> 1.51-1
 - Update to 1.51.
