@@ -4,7 +4,7 @@
 Summary: Portable, freeware Super Nintendo Entertainment System (TM) emulator
 Name: snes9x
 Version: 1.51
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Other
 Group: Applications/Emulators
 URL: http://www.snes9x.com/
@@ -61,6 +61,9 @@ and Super Famicom Nintendo game systems on your computer.
 
 
 %changelog
+* Sun Mar 29 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.51-3
+- rebuild for new F11 features
+
 * Sat Oct 18 2008 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info - 1.51-2
 - rebuild for RPM Fusion
 - always build for xorg
