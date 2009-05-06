@@ -4,12 +4,13 @@
 Summary: Portable, freeware Super Nintendo Entertainment System (TM) emulator
 Name: snes9x
 Version: 1.51
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Other
 Group: Applications/Emulators
 URL: http://www.snes9x.com/
 Source: http://files.ipherswipsite.com/snes9x/snes9x-%{real_version}%{?prever}-src.tar.bz2
 Patch0: snes9x-1.43-wmclass.patch
+Patch1: snes9x-1.51-src-fixes.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gcc-c++, zlib-devel, libpng-devel
 BuildRequires: libGL-devel, libGLU-devel
@@ -23,8 +24,9 @@ and Super Famicom Nintendo game systems on your computer.
 
 
 %prep
-%setup -n %{name}-%{real_version}%{?prever:-dev}-src
+%setup -q -n %{name}-%{real_version}%{?prever:-dev}-src
 %patch0 -p2 -b .wmclass
+%patch1 -p1 -b .fixes
 
 
 %build
@@ -61,6 +63,10 @@ and Super Famicom Nintendo game systems on your computer.
 
 
 %changelog
+* Wed May  6 2009 Matthias Saou <http://freshrpms.net/> 1.51-4
+- Include patch to fix the current compilation errors.
+- Quiet setup.
+
 * Sun Mar 29 2009 Thorsten Leemhuis <fedora [AT] leemhuis [DOT] info> - 1.51-3
 - rebuild for new F11 features
 
