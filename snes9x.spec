@@ -1,7 +1,7 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
 Version: 1.52
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: Other
 Group: Applications/Emulators
 URL: http://code.google.com/p/snes9x-gtk/
@@ -38,14 +38,14 @@ export CXXFLAGS="%{optflags} -lX11 -ldl -lXext"
 # First, build the GTK version
 cd gtk
 %configure \
-  --without-oss \
-  --with-netplay
+    --without-oss \
+    --with-netplay
 %{__make} %{?_smp_mflags}
 cd ..
 # Second, build the CLI version
 cd unix
 %configure \
-  --enable-netplay
+    --enable-netplay
 %{__make} %{?_smp_mflags}
 cd ..
 
@@ -63,6 +63,21 @@ cd ..
 %{__rm} -rf %{buildroot}
 
 
+%post
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
+update-desktop-database &> /dev/null || :
+
+%postun
+if [ $1 -eq 0 ] ; then
+    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
+update-desktop-database &> /dev/null || :
+
+%posttrans
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
+
 %files -f snes9x-gtk.lang
 %defattr(-,root,root,-)
 %doc gtk/doc/* unix/docs/readme_unix.html
@@ -73,6 +88,9 @@ cd ..
 
 
 %changelog
+* Thu Oct 14 2010 Matthias Saou <http://freshrpms.net/> 1.52-2
+- Add missing scriplets now that there are icons and a MimeType.
+
 * Wed Aug 11 2010 Matthias Saou <http://freshrpms.net/> 1.52-1
 - Update to 1.52, which is now hosted at google (sort of a unique fork).
 - Now include the new gtk version, it also supports OpenGL.
