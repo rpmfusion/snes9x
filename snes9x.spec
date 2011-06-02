@@ -1,13 +1,11 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
-Version: 1.52
-Release: 2%{?dist}
+Version: 1.53
+Release: 1%{?dist}
 License: Other
 Group: Applications/Emulators
 URL: http://code.google.com/p/snes9x-gtk/
 Source: http://snes9x-gtk.googlecode.com/files/snes9x-%{version}-src.tar.bz2
-# http://download.sessionclan.de/overfiend/snes9x/snes9x-1.52-src.fix4.diffs.zip
-Patch0: snes9x-1.52-core.fix4.diff
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 BuildRequires: gcc-c++
 BuildRequires: zlib-devel, libpng-devel
@@ -28,13 +26,9 @@ and Super Famicom Nintendo game systems on your computer.
 
 %prep
 %setup -q -n %{name}-%{version}-src
-%patch0 -p0 -b .fixes
 
 
 %build
-# Workaround for all of the missing links (as of 1.52)
-export CFLAGS="%{optflags} -lX11 -ldl -lXext"
-export CXXFLAGS="%{optflags} -lX11 -ldl -lXext"
 # First, build the GTK version
 cd gtk
 %configure \
@@ -88,6 +82,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Wed Jun  1 2011 Matthias Saou <http://freshrpms.net/> 1.53-1
+- Update to 1.53.
+- Remove no longer needed patch and compile time lib hacks.
+
 * Thu Oct 14 2010 Matthias Saou <http://freshrpms.net/> 1.52-2
 - Add missing scriplets now that there are icons and a MimeType.
 
