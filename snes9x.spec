@@ -1,7 +1,7 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
 Version: 1.53
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: Other
 Group: Applications/Emulators
 URL: http://code.google.com/p/snes9x-gtk/
@@ -82,6 +82,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Tue Mar 12 2013 Nicolas Chauvet <kwizart@gmail.com> - 1.53-4
+- https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Thu Mar 08 2012 Nicolas Chauvet <kwizart@gmail.com> - 1.53-3
 - Rebuilt for c++ ABI breakage
 
