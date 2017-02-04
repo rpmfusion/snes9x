@@ -1,87 +1,129 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
-Version: 1.53
-Release: 5%{?dist}
+Version: 1.54.1
+Release: 1%{?dist}
 License: Other
-Group: Applications/Emulators
-URL: http://code.google.com/p/snes9x-gtk/
-Source: http://snes9x-gtk.googlecode.com/files/snes9x-%{version}-src.tar.bz2
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+URL: http://www.snes9x.com/
+Source: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
+# Fix CFLAGS and LDFLAGS usage in CLI version
+Patch0: %{name}-1.54.1-unix_flags.patch
 BuildRequires: gcc-c++
-BuildRequires: zlib-devel, libpng-devel
-BuildRequires: libXv-devel, libXrandr-devel
+BuildRequires: autoconf
+BuildRequires: zlib-devel
+BuildRequires: libpng-devel
+BuildRequires: libXv-devel
+BuildRequires: libXrandr-devel
+BuildRequires: libGL-devel
 BuildRequires: nasm
 BuildRequires: intltool
-BuildRequires: gtk2-devel, libglade2-devel
+BuildRequires: gtk2-devel
+BuildRequires: libglade2-devel
 BuildRequires: SDL-devel
+BuildRequires: libxml2-devel
 BuildRequires: portaudio-devel
 BuildRequires: alsa-lib-devel
 BuildRequires: pulseaudio-libs-devel
+BuildRequires: desktop-file-utils
 
 %description
 Snes9x is a portable, freeware Super Nintendo Entertainment System (SNES)
 emulator. It basically allows you to play most games designed for the SNES
 and Super Famicom Nintendo game systems on your computer.
 
+%package gtk
+Summary: Super Nintendo Entertainment System emulator - GTK version
+Requires: hicolor-icon-theme
+
+%description gtk
+Snes9x is a portable, freeware Super Nintendo Entertainment System (SNES)
+emulator. It basically allows you to play most games designed for the SNES
+and Super Famicom Nintendo game systems on your computer.
+
+This package contains a graphical user interface using GTK+.
+
 
 %prep
-%setup -q -n %{name}-%{version}-src
+%setup -q
+%patch0 -p1
 
 
 %build
-# First, build the GTK version
-cd gtk
+# Build GTK version
+pushd gtk
+./autogen.sh
 %configure \
+    --disable-silent-rules \
     --without-oss \
     --with-netplay
-%{__make} %{?_smp_mflags}
-cd ..
-# Second, build the CLI version
-cd unix
+%make_build
+popd
+
+# Build CLI version
+pushd unix
+autoreconf
 %configure \
     --enable-netplay
-%{__make} %{?_smp_mflags}
-cd ..
+%make_build
+popd
 
 
 %install
-%{__rm} -rf %{buildroot}
-cd gtk
-%{__make} install DESTDIR=%{buildroot}
-cd ..
+# Install GTK version
+%make_install -C gtk
+
+# Install CLI version
+mkdir -p %{buildroot}%{_bindir}
+install -p -m 0755 unix/snes9x %{buildroot}%{_bindir}
+
+# Validate desktop file
+desktop-file-validate \
+  %{buildroot}%{_datadir}/applications/%{name}.desktop
+
 %find_lang snes9x-gtk
-%{__install} -p -m 0755 unix/snes9x %{buildroot}%{_bindir}/snes9x
 
 
-%clean
-%{__rm} -rf %{buildroot}
-
-
-%post
+%post gtk
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 update-desktop-database &> /dev/null || :
 
-%postun
+
+%postun gtk
 if [ $1 -eq 0 ] ; then
     touch --no-create %{_datadir}/icons/hicolor &>/dev/null
     gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 fi
 update-desktop-database &> /dev/null || :
 
-%posttrans
+
+%posttrans gtk
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
-%files -f snes9x-gtk.lang
-%defattr(-,root,root,-)
-%doc gtk/doc/* unix/docs/readme_unix.html
+%files
+%license docs/snes9x-license.txt
+%doc docs/changes.txt
+%doc unix/docs/readme_unix.html
 %{_bindir}/snes9x
+
+
+%files gtk -f snes9x-gtk.lang
+%license docs/snes9x-license.txt
+%license gtk/doc/LICENSE
+%license gtk/doc/lgpl.txt
+%doc docs/changes.txt
+%doc gtk/doc/README
 %{_bindir}/snes9x-gtk
 %{_datadir}/applications/snes9x.desktop
 %{_datadir}/icons/hicolor/*/apps/snes9x.*
 
 
 %changelog
+* Sat Jan 28 2017 Andrea Musuruane <musuruan@gmail.com> - 1.54.1-1
+- Updated to 1.54.1
+- Made separate gtk package
+- Dropped obsolete Group, Buildroot, %%clean and %%defattr
+- Dropped cleaning at the beginning of %%install
+
 * Sun Aug 31 2014 Sérgio Basto <sergio@serjux.com> - 1.53-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
