@@ -1,7 +1,7 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
 Version: 1.54.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Other
 URL: http://www.snes9x.com/
 Source: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -118,6 +118,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 
 %changelog
+* Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.54.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
+
 * Sun Mar 26 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.54.1-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
