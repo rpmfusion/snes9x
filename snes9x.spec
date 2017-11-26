@@ -1,12 +1,13 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
-Version: 1.54.1
-Release: 3%{?dist}
+Version: 1.55
+Release: 1%{?dist}
 License: Other
 URL: http://www.snes9x.com/
-Source: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
-# Fix CFLAGS and LDFLAGS usage in CLI version
-Patch0: %{name}-1.54.1-unix_flags.patch
+Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
+Source1: %{name}.appdata.xml
+# Fix CFLAGS usage in CLI version
+Patch0: %{name}-1.55-unix_flags.patch
 BuildRequires: gcc-c++
 BuildRequires: autoconf
 BuildRequires: zlib-devel
@@ -20,10 +21,13 @@ BuildRequires: gtk2-devel
 BuildRequires: libglade2-devel
 BuildRequires: SDL-devel
 BuildRequires: libxml2-devel
+BuildRequires: minizip-devel
 BuildRequires: portaudio-devel
 BuildRequires: alsa-lib-devel
 BuildRequires: pulseaudio-libs-devel
 BuildRequires: desktop-file-utils
+BuildRequires: libappstream-glib
+Requires:      hicolor-icon-theme
 
 %description
 Snes9x is a portable, freeware Super Nintendo Entertainment System (SNES)
@@ -79,6 +83,11 @@ install -p -m 0755 unix/snes9x %{buildroot}%{_bindir}
 desktop-file-validate \
   %{buildroot}%{_datadir}/applications/%{name}.desktop
 
+# Install AppData file
+install -d %{buildroot}%{_datadir}/metainfo
+install -p -m 644 %{SOURCE1} %{buildroot}%{_datadir}/metainfo
+appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata.xml
+
 %find_lang snes9x-gtk
 
 
@@ -113,11 +122,17 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc docs/changes.txt
 %doc gtk/doc/README
 %{_bindir}/snes9x-gtk
+%{_datadir}/metainfo/snes9x.appdata.xml
 %{_datadir}/applications/snes9x.desktop
 %{_datadir}/icons/hicolor/*/apps/snes9x.*
 
 
 %changelog
+* Sun Nov 26 2017 Andrea Musuruane <musuruan@gmail.com> - 1.55-1
+- Updated to 1.55
+- Added AppData file
+- Added missing Requires
+
 * Thu Aug 31 2017 RPM Fusion Release Engineering <kwizart@rpmfusion.org> - 1.54.1-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Mass_Rebuild
 

@@ -1,11 +1,10 @@
-diff -durN snes9x-1.54.1.orig/unix/configure.ac snes9x-1.54.1/unix/configure.ac
---- snes9x-1.54.1.orig/unix/configure.ac	2016-10-15 02:20:34.000000000 +0200
-+++ snes9x-1.54.1/unix/configure.ac	2017-02-04 18:52:33.297396407 +0100
-@@ -55,50 +55,6 @@
- # *****************************
+diff -urN snes9x-1.55/unix/configure.ac snes9x-1.55-patched/unix/configure.ac
+--- snes9x-1.55/unix/configure.ac	2017-11-20 04:16:36.000000000 +1000
++++ snes9x-1.55-patched/unix/configure.ac	2017-11-21 23:18:19.902227796 +1000
+@@ -56,49 +56,6 @@
  # *** Execution begins here ***
  # *****************************
--
+ 
 -# Remove -g and -O2 flags manually.
 -
 -if test "x$CFLAGS" != "x"; then
@@ -52,15 +51,3 @@ diff -durN snes9x-1.54.1.orig/unix/configure.ac snes9x-1.54.1/unix/configure.ac
  AC_S9X_COMPILER_FLAG([-fno-exceptions],       [no_exceptions])
  AC_S9X_COMPILER_FLAG([-fno-rtti],             [no_rtti])
  AC_S9X_COMPILER_FLAG([-pedantic],             [pedantic])
-diff -durN snes9x-1.54.1.orig/unix/Makefile.in snes9x-1.54.1/unix/Makefile.in
---- snes9x-1.54.1.orig/unix/Makefile.in	2016-10-15 02:20:34.000000000 +0200
-+++ snes9x-1.54.1/unix/Makefile.in	2017-02-04 18:52:02.039108126 +0100
-@@ -47,7 +47,7 @@
- 	exit 1
- 
- snes9x: $(OBJECTS)
--	$(CCC) $(INCLUDES) -o $@ $(OBJECTS) -lm @S9XLIBS@
-+	$(CCC) $(LDFLAGS) $(INCLUDES) -o $@ $(OBJECTS) -lm @S9XLIBS@
- 
- ../jma/s9x-jma.o: ../jma/s9x-jma.cpp
- 	$(CCC) $(INCLUDES) -c $(CCFLAGS) -fexceptions $*.cpp -o $@
