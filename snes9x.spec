@@ -1,13 +1,13 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
-Version: 1.55
-Release: 2%{?dist}
+Version: 1.56.1
+Release: 1%{?dist}
 License: Other
 URL: http://www.snes9x.com/
 Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source1: %{name}.appdata.xml
 # Fix CFLAGS usage in CLI version
-Patch0: %{name}-1.55-unix_flags.patch
+Patch0: %{name}-1.56.1-unix_flags.patch
 BuildRequires: gcc-c++
 BuildRequires: autoconf
 BuildRequires: zlib-devel
@@ -17,7 +17,7 @@ BuildRequires: libXrandr-devel
 BuildRequires: libGL-devel
 BuildRequires: nasm
 BuildRequires: intltool
-BuildRequires: gtk2-devel
+BuildRequires: gtk3-devel
 BuildRequires: libglade2-devel
 BuildRequires: SDL-devel
 BuildRequires: libxml2-devel
@@ -91,23 +91,6 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata
 %find_lang snes9x-gtk
 
 
-%post gtk
-touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-update-desktop-database &> /dev/null || :
-
-
-%postun gtk
-if [ $1 -eq 0 ] ; then
-    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-fi
-update-desktop-database &> /dev/null || :
-
-
-%posttrans gtk
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-
-
 %files
 %license docs/snes9x-license.txt
 %doc docs/changes.txt
@@ -122,12 +105,17 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc docs/changes.txt
 %doc gtk/doc/README
 %{_bindir}/snes9x-gtk
+%{_datadir}/%{name}
 %{_datadir}/metainfo/snes9x.appdata.xml
 %{_datadir}/applications/snes9x.desktop
 %{_datadir}/icons/hicolor/*/apps/snes9x.*
 
 
 %changelog
+* Sat Jun 16 2018 Andrea Musuruane <musuruan@gmail.com> - 1.56.1-1
+- Updated to 1.56.1
+- Removed obsolete scriptlets
+
 * Fri Mar 02 2018 RPM Fusion Release Engineering <leigh123linux@googlemail.com> - 1.55-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 

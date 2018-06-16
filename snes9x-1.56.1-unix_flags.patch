@@ -1,22 +1,10 @@
-diff -urN snes9x-1.55/unix/configure.ac snes9x-1.55-patched/unix/configure.ac
---- snes9x-1.55/unix/configure.ac	2017-11-20 04:16:36.000000000 +1000
-+++ snes9x-1.55-patched/unix/configure.ac	2017-11-21 23:18:19.902227796 +1000
-@@ -56,49 +56,6 @@
+diff -durN snes9x-1.56.1.orig/unix/configure.ac snes9x-1.56.1/unix/configure.ac
+--- snes9x-1.56.1.orig/unix/configure.ac	2018-06-07 23:31:51.000000000 +0200
++++ snes9x-1.56.1/unix/configure.ac	2018-06-10 10:15:14.526524953 +0200
+@@ -56,37 +56,6 @@
  # *** Execution begins here ***
  # *****************************
  
--# Remove -g and -O2 flags manually.
--
--if test "x$CFLAGS" != "x"; then
--	CFLAGS="`echo \"$CFLAGS\" | sed -e 's/-g//'`"
--	CFLAGS="`echo \"$CFLAGS\" | sed -e 's/-O2//'`"
--fi
--
--if test "x$CXXFLAGS" != "x"; then
--	CXXFLAGS="`echo \"$CXXFLAGS\" | sed -e 's/-g//'`"
--	CXXFLAGS="`echo \"$CXXFLAGS\" | sed -e 's/-O2//'`"
--fi
--
 -# Test what compiler flags we should use.
 -
 -AC_ARG_ENABLE([debug],
