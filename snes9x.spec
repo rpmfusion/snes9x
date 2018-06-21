@@ -1,7 +1,7 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
 Version: 1.56.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Other
 URL: http://www.snes9x.com/
 Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -22,7 +22,7 @@ BuildRequires: nasm
 BuildRequires: intltool
 BuildRequires: gtk3-devel
 BuildRequires: libglade2-devel
-BuildRequires: SDL-devel
+BuildRequires: SDL2-devel
 BuildRequires: libxml2-devel
 BuildRequires: minizip-devel
 BuildRequires: portaudio-devel
@@ -116,6 +116,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata
 
 
 %changelog
+* Thu Jun 21 2018 Andrea Musuruane <musuruan@gmail.com> - 1.56.1-3
+- Fixed joystick support (BZ #4947)
+
 * Sat Jun 16 2018 Andrea Musuruane <musuruan@gmail.com> - 1.56.1-2
 - Added an upstream patch to fix compiling on ppc64
 
