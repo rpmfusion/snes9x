@@ -1,16 +1,13 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
-Version: 1.56.1
-Release: 3%{?dist}
+Version: 1.56.2
+Release: 1%{?dist}
 License: Other
 URL: http://www.snes9x.com/
 Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 Source1: %{name}.appdata.xml
 # Fix CFLAGS usage in CLI version
 Patch0: %{name}-1.56.1-unix_flags.patch
-# Fix compiling on ppc64
-# https://github.com/snes9xgit/snes9x/issues/338
-Patch1: %{name}-1.56.1-ppc64.patch
 BuildRequires: gcc-c++
 BuildRequires: autoconf
 BuildRequires: zlib-devel
@@ -52,7 +49,6 @@ This package contains a graphical user interface using GTK+.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
 
 
 %build
@@ -116,6 +112,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata
 
 
 %changelog
+* Sat Jun 23 2018 Andrea Musuruane <musuruan@gmail.com> - 1.56.2-1
+- Updated to 1.56.2
+
 * Thu Jun 21 2018 Andrea Musuruane <musuruan@gmail.com> - 1.56.1-3
 - Fixed joystick support (BZ #4947)
 
