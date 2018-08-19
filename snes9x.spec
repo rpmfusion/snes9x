@@ -1,7 +1,7 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
 Version: 1.56.2
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: Other
 URL: http://www.snes9x.com/
 Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -112,6 +112,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata
 
 
 %changelog
+* Sun Aug 19 2018 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.56.2-3
+- Rebuilt for Fedora 29 Mass Rebuild binutils issue
+
 * Fri Jul 27 2018 RPM Fusion Release Engineering <sergio@serjux.com> - 1.56.2-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
