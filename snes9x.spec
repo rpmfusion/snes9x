@@ -1,7 +1,7 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
-Version: 1.56.2
-Release: 3%{?dist}
+Version: 1.57
+Release: 1%{?dist}
 License: Other
 URL: http://www.snes9x.com/
 Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -21,7 +21,11 @@ BuildRequires: gtk3-devel
 BuildRequires: libglade2-devel
 BuildRequires: SDL2-devel
 BuildRequires: libxml2-devel
-BuildRequires: minizip-devel
+%if 0%{?fedora} >= 30
+BuildRequires:	minizip-compat-devel
+%else
+BuildRequires:	minizip-devel
+%endif
 BuildRequires: portaudio-devel
 BuildRequires: alsa-lib-devel
 BuildRequires: pulseaudio-libs-devel
@@ -50,6 +54,9 @@ This package contains a graphical user interface using GTK+.
 %setup -q
 %patch0 -p1
 
+# Remove bundled libs
+rm -rf unzip
+
 
 %build
 # Build GTK version
@@ -66,6 +73,7 @@ popd
 pushd unix
 autoreconf
 %configure \
+    --with-system-zip \
     --enable-netplay
 %make_build
 popd
@@ -112,6 +120,10 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata
 
 
 %changelog
+* Sun Nov 25 2018 Andrea Musuruane <musuruan@gmail.com> - 1.57-1
+- Updated to 1.57
+- Updated BR to minizip-compat-devel for F30+
+
 * Sun Aug 19 2018 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.56.2-3
 - Rebuilt for Fedora 29 Mass Rebuild binutils issue
 
