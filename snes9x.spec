@@ -1,6 +1,6 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
-Version: 1.57
+Version: 1.58
 Release: 1%{?dist}
 License: Other
 URL: http://www.snes9x.com/
@@ -64,8 +64,7 @@ pushd gtk
 ./autogen.sh
 %configure \
     --disable-silent-rules \
-    --without-oss \
-    --with-netplay
+    --without-oss
 %make_build
 popd
 
@@ -100,18 +99,16 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata
 
 
 %files
-%license docs/snes9x-license.txt
+%license LICENSE
 %doc docs/changes.txt
 %doc unix/docs/readme_unix.html
 %{_bindir}/snes9x
 
 
 %files gtk -f snes9x-gtk.lang
-%license docs/snes9x-license.txt
-%license gtk/doc/LICENSE
-%license gtk/doc/lgpl.txt
+%license LICENSE
 %doc docs/changes.txt
-%doc gtk/doc/README
+%doc gtk/AUTHORS
 %{_bindir}/snes9x-gtk
 %{_datadir}/%{name}
 %{_datadir}/metainfo/snes9x.appdata.xml
@@ -120,6 +117,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata
 
 
 %changelog
+* Fri Dec 21 2018 Andrea Musuruane <musuruan@gmail.com> - 1.58-1
+- Updated to 1.58
+
 * Sun Nov 25 2018 Andrea Musuruane <musuruan@gmail.com> - 1.57-1
 - Updated to 1.57
 - Updated BR to minizip-compat-devel for F30+
