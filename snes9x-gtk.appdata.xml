@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-<id>snes9x.desktop</id>
+	<id>snes9x-gtk.desktop</id>
 	<metadata_license>CC-BY-SA-3.0</metadata_license>
 	<project_license>Other</project_license>
 	<name>Snes9x</name>

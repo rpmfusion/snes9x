@@ -1,14 +1,16 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
-Version: 1.58
+Version: 1.59.2
 Release: 1%{?dist}
 License: Other
 URL: http://www.snes9x.com/
 Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
-Source1: %{name}.appdata.xml
+Source1: %{name}-gtk.appdata.xml
 # Fix CFLAGS usage in CLI version
 Patch0: %{name}-1.56.1-unix_flags.patch
+
 BuildRequires: gcc-c++
+BuildRequires: meson
 BuildRequires: autoconf
 BuildRequires: zlib-devel
 BuildRequires: libpng-devel
@@ -61,11 +63,8 @@ rm -rf unzip
 %build
 # Build GTK version
 pushd gtk
-./autogen.sh
-%configure \
-    --disable-silent-rules \
-    --without-oss
-%make_build
+%meson
+%meson_build
 popd
 
 # Build CLI version
@@ -80,43 +79,49 @@ popd
 
 %install
 # Install GTK version
-%make_install -C gtk
+pushd gtk
+%meson_install
+popd
 
 # Install CLI version
 mkdir -p %{buildroot}%{_bindir}
-install -p -m 0755 unix/snes9x %{buildroot}%{_bindir}
+install -p -m 0755 unix/%{name} %{buildroot}%{_bindir}
 
 # Validate desktop file
 desktop-file-validate \
-  %{buildroot}%{_datadir}/applications/%{name}.desktop
+  %{buildroot}%{_datadir}/applications/%{name}-gtk.desktop
 
 # Install AppData file
 install -d %{buildroot}%{_datadir}/metainfo
 install -p -m 644 %{SOURCE1} %{buildroot}%{_datadir}/metainfo
 appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata.xml
 
-%find_lang snes9x-gtk
+%find_lang %{name}-gtk
 
 
 %files
 %license LICENSE
 %doc docs/changes.txt
 %doc unix/docs/readme_unix.html
-%{_bindir}/snes9x
+%{_bindir}/%{name}
 
 
-%files gtk -f snes9x-gtk.lang
+%files gtk -f %{name}-gtk.lang
 %license LICENSE
 %doc docs/changes.txt
 %doc gtk/AUTHORS
-%{_bindir}/snes9x-gtk
+%{_bindir}/%{name}-gtk
 %{_datadir}/%{name}
-%{_datadir}/metainfo/snes9x.appdata.xml
-%{_datadir}/applications/snes9x.desktop
-%{_datadir}/icons/hicolor/*/apps/snes9x.*
+%{_datadir}/metainfo/%{name}-gtk.appdata.xml
+%{_datadir}/applications/%{name}-gtk.desktop
+%{_datadir}/icons/hicolor/*/apps/%{name}.*
 
 
 %changelog
+* Sat Mar 02 2019 Andrea Musuruane <musuruan@gmail.com> - 1.59.2-1
+- Updated to 1.59.2
+- Improved macro usage
+
 * Fri Dec 21 2018 Andrea Musuruane <musuruan@gmail.com> - 1.58-1
 - Updated to 1.58
 
