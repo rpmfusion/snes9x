@@ -1,0 +1,22 @@
+From 54a961d8ca57c5d81a5f2d4e2743330bc7446aa6 Mon Sep 17 00:00:00 2001
+From: Brandon Wright <bearoso@gmail.com>
+Date: Wed, 24 Apr 2019 15:22:16 -0500
+Subject: [PATCH] Don't set soundsync on with no way to disable.
+
+---
+ snes9x.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/snes9x.cpp b/snes9x.cpp
+index 2ce2919f..95030e73 100644
+--- a/snes9x.cpp
++++ b/snes9x.cpp
+@@ -234,7 +234,7 @@ void S9xLoadConfigFiles (char **argv, int argc)
+ 
+ 	// Sound
+ 
+-	Settings.SoundSync                  =  conf.GetBool("Sound::Sync",                         true);
++	Settings.SoundSync                  =  conf.GetBool("Sound::Sync",                         false);
+ 	Settings.SixteenBitSound            =  conf.GetBool("Sound::16BitSound",                   true);
+ 	Settings.Stereo                     =  conf.GetBool("Sound::Stereo",                       true);
+ 	Settings.ReverseStereo              =  conf.GetBool("Sound::ReverseStereo",                false);

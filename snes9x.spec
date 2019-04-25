@@ -1,6 +1,6 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
-Version: 1.59.2
+Version: 1.60
 Release: 1%{?dist}
 License: Other
 URL: http://www.snes9x.com/
@@ -8,6 +8,10 @@ Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-
 Source1: %{name}-gtk.appdata.xml
 # Fix CFLAGS usage in CLI version
 Patch0: %{name}-1.56.1-unix_flags.patch
+# Don't set soundsync on with no way to disable
+# https://github.com/snes9xgit/snes9x/issues/530
+# https://github.com/snes9xgit/snes9x/commit/54a961d8ca57c5d81a5f2d4e2743330bc7446aa6
+Patch1: %{name}-1.60-soundsync.patch
 
 BuildRequires: gcc-c++
 BuildRequires: meson
@@ -55,6 +59,7 @@ This package contains a graphical user interface using GTK+.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 # Remove bundled libs
 rm -rf unzip
@@ -118,6 +123,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata
 
 
 %changelog
+* Wed Apr 24 2019 Andrea Musuruane <musuruan@gmail.com> - 1.60-1
+- Updated to 1.60
+
 * Sat Mar 02 2019 Andrea Musuruane <musuruan@gmail.com> - 1.59.2-1
 - Updated to 1.59.2
 - Improved macro usage
