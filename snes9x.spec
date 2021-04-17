@@ -1,7 +1,7 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
 Version: 1.60
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: Other
 URL: http://www.snes9x.com/
 Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -66,6 +66,9 @@ rm -rf unzip
 
 
 %build
+export CFLAGS="%{optflags} -std=gnu++14"
+export CXXFLAGS="%{optflags} -std=gnu++14"
+
 # Build GTK version
 pushd gtk
 %meson
@@ -123,6 +126,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata
 
 
 %changelog
+* Sat Apr 17 2021 Andrea Musuruane <musuruan@gmail.com> - 1.60-6
+- Fix FTBFS for gcc-11
+
 * Thu Feb 04 2021 RPM Fusion Release Engineering <leigh123linux@gmail.com> - 1.60-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
