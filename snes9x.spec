@@ -1,7 +1,7 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
 Version: 1.60
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: Other
 URL: http://www.snes9x.com/
 Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
@@ -12,6 +12,10 @@ Patch0: %{name}-1.56.1-unix_flags.patch
 # https://github.com/snes9xgit/snes9x/issues/530
 # https://github.com/snes9xgit/snes9x/commit/54a961d8ca57c5d81a5f2d4e2743330bc7446aa6
 Patch1: %{name}-1.60-soundsync.patch
+# Fix building with GCC 11
+# https://github.com/snes9xgit/snes9x/issues/698
+# https://github.com/snes9xgit/snes9x/commit/7f6d9d6432d912cd90763c64f7c92270b3e6c182
+Patch2: %{name}-1.60-gcc11.patch
 
 BuildRequires: gcc-c++
 BuildRequires: meson
@@ -57,18 +61,13 @@ This package contains a graphical user interface using GTK+.
 
 
 %prep
-%setup -q
-%patch0 -p1
-%patch1 -p1
+%autosetup -p1
 
 # Remove bundled libs
 rm -rf unzip
 
 
 %build
-export CFLAGS="%{optflags} -std=gnu++14"
-export CXXFLAGS="%{optflags} -std=gnu++14"
-
 # Build GTK version
 pushd gtk
 %meson
@@ -126,6 +125,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata
 
 
 %changelog
+* Sun May 16 2021 Andrea Musuruane <musuruan@gmail.com> - 1.60-7
+- Add an upstream patch to fix FTBFS for gcc-11
+
 * Sat Apr 17 2021 Andrea Musuruane <musuruan@gmail.com> - 1.60-6
 - Fix FTBFS for gcc-11
 
