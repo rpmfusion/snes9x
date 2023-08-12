@@ -1,24 +1,24 @@
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
-Version: 1.60
-Release: 11%{?dist}
+Version: 1.62.3
+Release: 1%{?dist}
 License: Other
 URL: http://www.snes9x.com/
 Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
+# AppData file
 Source1: %{name}-gtk.appdata.xml
+# Bundled Libraries
+Source10: https://github.com/KhronosGroup/glslang/archive/12.1.0/glslang-12.1.0.tar.gz
+Source11: https://github.com/KhronosGroup/SPIRV-Cross/archive/refs/tags/sdk-1.3.243.0.tar.gz#/SPIRV-Cross-1.3.243.0.tar.gz
+Source12: https://github.com/KhronosGroup/Vulkan-Headers/archive/v1.3.242/Vulkan-Headers-1.3.242.tar.gz
 # Fix CFLAGS usage in CLI version
 Patch0: %{name}-1.56.1-unix_flags.patch
-# Don't set soundsync on with no way to disable
-# https://github.com/snes9xgit/snes9x/issues/530
-# https://github.com/snes9xgit/snes9x/commit/54a961d8ca57c5d81a5f2d4e2743330bc7446aa6
-Patch1: %{name}-1.60-soundsync.patch
-# Fix building with GCC 11
-# https://github.com/snes9xgit/snes9x/issues/698
-# https://github.com/snes9xgit/snes9x/commit/7f6d9d6432d912cd90763c64f7c92270b3e6c182
-Patch2: %{name}-1.60-gcc11.patch
+# Fix building with GCC 13
+# https://gitweb.gentoo.org/repo/gentoo.git/tree/games-emulation/snes9x/files/snes9x-1.62.1-gcc13.patch
+Patch1: %{name}-1.62.1-gcc13.patch
 
 BuildRequires: gcc-c++
-BuildRequires: meson
+BuildRequires: cmake
 BuildRequires: autoconf
 BuildRequires: zlib-devel
 BuildRequires: libpng-devel
@@ -27,21 +27,20 @@ BuildRequires: libXrandr-devel
 BuildRequires: libGL-devel
 BuildRequires: nasm
 BuildRequires: intltool
-BuildRequires: gtk3-devel
+BuildRequires: gtkmm30-devel
 BuildRequires: libglade2-devel
 BuildRequires: SDL2-devel
 BuildRequires: libxml2-devel
-%if 0%{?fedora} >= 30
-BuildRequires:	minizip-compat-devel
-%else
-BuildRequires:	minizip-devel
-%endif
+BuildRequires: minizip-compat-devel
 BuildRequires: portaudio-devel
 BuildRequires: alsa-lib-devel
 BuildRequires: pulseaudio-libs-devel
 BuildRequires: desktop-file-utils
 BuildRequires: libappstream-glib
 Requires:      hicolor-icon-theme
+
+Provides: bundled(glslang) = 12.1.0
+Provides: bundled(spirv-cross) = 1.3.243.0
 
 %description
 Snes9x is a portable, freeware Super Nintendo Entertainment System (SNES)
@@ -62,6 +61,13 @@ This package contains a graphical user interface using GTK+.
 
 %prep
 %autosetup -p1
+%setup -q -T -D -a 10
+%setup -q -T -D -a 11
+%setup -q -T -D -a 12
+
+mv -Tf glslang-12.1.0 external/glslang
+mv -Tf SPIRV-Cross-sdk-1.3.243.0 external/SPIRV-Cross
+mv -Tf Vulkan-Headers-1.3.242 external/vulkan-headers
 
 # Remove bundled libs
 rm -rf unzip
@@ -70,8 +76,10 @@ rm -rf unzip
 %build
 # Build GTK version
 pushd gtk
-%meson
-%meson_build
+%cmake \
+  -DCMAKE_INSTALL_LOCALEDIR:PATH=share/locale \
+  -DBUILD_SHARED_LIBS:BOOL=OFF
+%cmake_build
 popd
 
 # Build CLI version
@@ -87,7 +95,7 @@ popd
 %install
 # Install GTK version
 pushd gtk
-%meson_install
+%cmake_install
 popd
 
 # Install CLI version
@@ -99,9 +107,9 @@ desktop-file-validate \
   %{buildroot}%{_datadir}/applications/%{name}-gtk.desktop
 
 # Install AppData file
-install -d %{buildroot}%{_datadir}/metainfo
-install -p -m 644 %{SOURCE1} %{buildroot}%{_datadir}/metainfo
-appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata.xml
+install -d %{buildroot}%{_metainfodir}
+install -p -m 644 %{SOURCE1} %{buildroot}%{_metainfodir}
+appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 
 %find_lang %{name}-gtk
 
@@ -119,12 +127,15 @@ appstream-util validate-relax --nonet %{buildroot}%{_datadir}/metainfo/*.appdata
 %doc gtk/AUTHORS
 %{_bindir}/%{name}-gtk
 %{_datadir}/%{name}
-%{_datadir}/metainfo/%{name}-gtk.appdata.xml
 %{_datadir}/applications/%{name}-gtk.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.*
+%{_metainfodir}/%{name}-gtk.appdata.xml
 
 
 %changelog
+* Sat Aug 12 2023 Andrea Musuruane <musuruan@gmail.com> - 1.62.3-1
+- Updated to 1.62.3
+
 * Thu Aug 03 2023 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.60-11
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_39_Mass_Rebuild
 
