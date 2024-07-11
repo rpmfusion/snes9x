@@ -1,21 +1,25 @@
+%global SPIRV_Cross_version 1.3.261.1
+%global glslang_version 12.1.0
+%global vulkan_headers_version 1.3.280
+
 Summary: Super Nintendo Entertainment System emulator
 Name: snes9x
-Version: 1.62.3
-Release: 2%{?dist}
+Version: 1.63
+Release: 1%{?dist}
 License: Other
 URL: http://www.snes9x.com/
 Source0: https://github.com/snes9xgit/snes9x/archive/%{version}.tar.gz#/%{name}-%{version}.tar.gz
 # AppData file
 Source1: %{name}-gtk.appdata.xml
 # Bundled Libraries
-Source10: https://github.com/KhronosGroup/glslang/archive/12.1.0/glslang-12.1.0.tar.gz
-Source11: https://github.com/KhronosGroup/SPIRV-Cross/archive/refs/tags/sdk-1.3.243.0.tar.gz#/SPIRV-Cross-1.3.243.0.tar.gz
-Source12: https://github.com/KhronosGroup/Vulkan-Headers/archive/v1.3.242/Vulkan-Headers-1.3.242.tar.gz
+Source10: https://github.com/KhronosGroup/SPIRV-Cross/archive/refs/tags/sdk-%{SPIRV_Cross_version}.tar.gz#/SPIRV-Cross-%{SPIRV_Cross_version}.tar.gz
+Source11: https://github.com/KhronosGroup/glslang/archive/%{glslang_version}/glslang-%{glslang_version}.tar.gz
+Source12: https://github.com/KhronosGroup/Vulkan-Headers/archive/v%{vulkan_headers_version}/Vulkan-Headers-%{vulkan_headers_version}.tar.gz
 # Fix CFLAGS usage in CLI version
 Patch0: %{name}-1.56.1-unix_flags.patch
-# Fix building with GCC 13
-# https://gitweb.gentoo.org/repo/gentoo.git/tree/games-emulation/snes9x/files/snes9x-1.62.1-gcc13.patch
-Patch1: %{name}-1.62.1-gcc13.patch
+# Fix format strings
+# Patch from Chimera Linux
+Patch1: %{name}-1.63-format_strings.patch
 
 BuildRequires: gcc-c++
 BuildRequires: cmake
@@ -39,8 +43,8 @@ BuildRequires: desktop-file-utils
 BuildRequires: libappstream-glib
 Requires:      hicolor-icon-theme
 
-Provides: bundled(glslang) = 12.1.0
-Provides: bundled(spirv-cross) = 1.3.243.0
+Provides: bundled(spirv-cross) = %{SPIRV_Cross_version}
+Provides: bundled(glslang) = %{glslang_version}
 
 %description
 Snes9x is a portable, freeware Super Nintendo Entertainment System (SNES)
@@ -65,9 +69,9 @@ This package contains a graphical user interface using GTK+.
 %setup -q -T -D -a 11
 %setup -q -T -D -a 12
 
-mv -Tf glslang-12.1.0 external/glslang
-mv -Tf SPIRV-Cross-sdk-1.3.243.0 external/SPIRV-Cross
-mv -Tf Vulkan-Headers-1.3.242 external/vulkan-headers
+mv -Tf SPIRV-Cross-sdk-%{SPIRV_Cross_version} external/SPIRV-Cross
+mv -Tf glslang-%{glslang_version} external/glslang
+mv -Tf Vulkan-Headers-%{vulkan_headers_version} external/vulkan-headers
 
 # Remove bundled libs
 rm -rf unzip
@@ -133,6 +137,9 @@ appstream-util validate-relax --nonet %{buildroot}%{_metainfodir}/*.appdata.xml
 
 
 %changelog
+* Thu Jul 11 2024 Andrea Musuruane <musuruan@gmail.com> - 1.63-1
+- Updated to 1.63
+
 * Sun Feb 04 2024 RPM Fusion Release Engineering <sergiomb@rpmfusion.org> - 1.62.3-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_40_Mass_Rebuild
 
