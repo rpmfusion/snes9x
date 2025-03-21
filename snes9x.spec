@@ -20,6 +20,8 @@ Patch0: %{name}-1.56.1-unix_flags.patch
 # Fix format strings
 # Patch from Chimera Linux
 Patch1: %{name}-1.63-format_strings.patch
+# Fix external glslang missing include
+Patch2: glslang_add_missing_incude.patch
 
 BuildRequires: gcc-c++
 BuildRequires: cmake
@@ -64,7 +66,7 @@ This package contains a graphical user interface using GTK+.
 
 
 %prep
-%autosetup -p1
+%autosetup -N
 %setup -q -T -D -a 10
 %setup -q -T -D -a 11
 %setup -q -T -D -a 12
@@ -72,6 +74,8 @@ This package contains a graphical user interface using GTK+.
 mv -Tf SPIRV-Cross-sdk-%{SPIRV_Cross_version} external/SPIRV-Cross
 mv -Tf glslang-%{glslang_version} external/glslang
 mv -Tf Vulkan-Headers-%{vulkan_headers_version} external/vulkan-headers
+
+%autopatch -p1
 
 # Remove bundled libs
 rm -rf unzip

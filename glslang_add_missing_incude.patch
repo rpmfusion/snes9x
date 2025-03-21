@@ -1,0 +1,11 @@
+diff -uNrp a/external/glslang/SPIRV/SpvBuilder.h b/external/glslang/SPIRV/SpvBuilder.h
+--- a/external/glslang/SPIRV/SpvBuilder.h	2023-03-21 22:20:54.000000000 +0000
++++ b/external/glslang/SPIRV/SpvBuilder.h	2025-03-21 15:12:29.300647508 +0000
+@@ -61,6 +61,7 @@ namespace spv {
+ #include <set>
+ #include <sstream>
+ #include <stack>
++#include <cstdint>
+ #include <unordered_map>
+ #include <map>
+ 
