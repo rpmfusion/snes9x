@@ -86,7 +86,8 @@ rm -rf unzip
 pushd gtk
 %cmake \
   -DCMAKE_INSTALL_LOCALEDIR:PATH=share/locale \
-  -DBUILD_SHARED_LIBS:BOOL=OFF
+  -DBUILD_SHARED_LIBS:BOOL=OFF \
+  -DCMAKE_POLICY_VERSION_MINIMUM=3.5
 %cmake_build
 popd
 
